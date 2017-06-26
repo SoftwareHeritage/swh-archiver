@@ -24,23 +24,15 @@ from swh.archiver.db import utcnow
 from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError
 
-try:
-    # objstorage > 0.17
-    from swh.objstorage.api.server import make_app as app
-    from server_testing import ServerTestFixtureAsync as ServerTestFixture
-    MIGRATED = True
-except ImportError:
-    # objstorage <= 0.17
-    from swh.objstorage.api.server import app
-    from server_testing import ServerTestFixture
-    MIGRATED = False
+from swh.objstorage.api.server import make_app as app
+from swh.storage.tests.server_testing import ServerTestFixtureAsync
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 TEST_DATA_DIR = os.path.join(TEST_DIR, '../../../../swh-storage-testdata')
 
 
 @attr('db')
-class TestArchiver(DbsTestFixture, ServerTestFixture,
+class TestArchiver(DbsTestFixture, ServerTestFixtureAsync,
                    unittest.TestCase):
     """ Test the objstorage archiver.
     """
@@ -65,10 +57,7 @@ class TestArchiver(DbsTestFixture, ServerTestFixture,
                 'slicing': '0:2/2:4/4:6',
             }
         }
-        if MIGRATED:
-            self.app = app(self.config)
-        else:
-            self.app = app
+        self.app = app(self.config)
         super().setUp()
 
         # Retrieve connection (depends on the order in TEST_DB_NAMES)
