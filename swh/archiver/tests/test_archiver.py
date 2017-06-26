@@ -15,11 +15,11 @@ from nose.plugins.attrib import attr
 
 from swh.core.tests.db_testing import DbsTestFixture
 
-from swh.storage.archiver.storage import get_archiver_storage
+from swh.archiver.storage import get_archiver_storage
 
-from swh.storage.archiver import ArchiverWithRetentionPolicyDirector
-from swh.storage.archiver import ArchiverWithRetentionPolicyWorker
-from swh.storage.archiver.db import utcnow
+from swh.archiver import ArchiverWithRetentionPolicyDirector
+from swh.archiver import ArchiverWithRetentionPolicyWorker
+from swh.archiver.db import utcnow
 
 from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError

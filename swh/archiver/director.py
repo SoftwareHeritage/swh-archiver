@@ -157,7 +157,7 @@ class ArchiverWithRetentionPolicyDirector(ArchiverDirectorBase):
         'retention_policy': ('int', 2),
     }
 
-    TASK_NAME = 'swh.storage.archiver.tasks.SWHArchiverWithRetentionPolicyTask'
+    TASK_NAME = 'swh.archiver.tasks.SWHArchiverWithRetentionPolicyTask'
 
     def __init__(self, start_id):
         super().__init__()
@@ -235,7 +235,7 @@ class ArchiverStdinToBackendDirector(ArchiverDirectorBase):
 
     CONFIG_BASE_FILENAME = 'archiver/worker-to-backend'
 
-    TASK_NAME = 'swh.storage.archiver.tasks.SWHArchiverToBackendTask'
+    TASK_NAME = 'swh.archiver.tasks.SWHArchiverToBackendTask'
 
     def __init__(self):
         super().__init__()

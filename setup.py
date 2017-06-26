@@ -16,20 +16,14 @@ def parse_requirements():
 
 
 setup(
-    name='swh.storage',
-    description='Software Heritage storage manager',
+    name='swh.archiver',
+    description='Software Heritage archiver',
     author='Software Heritage developers',
     author_email='swh-devel@inria.fr',
-    url='https://forge.softwareheritage.org/diffusion/DSTO/',
+    url='https://forge.softwareheritage.org/diffusion/DARC/',
     packages=[
-        'swh.storage',
-        'swh.storage.archiver',
-        'swh.storage.api',
-        'swh.storage.provenance',
-        'swh.storage.tests',
-    ],
-    scripts=[
-        'bin/swh-storage-add-dir',
+        'swh.archiver',
+        'swh.archiver.tests',
     ],
     install_requires=parse_requirements(),
     setup_requires=['vcversioner'],
