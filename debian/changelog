@@ -1,5 +1,7 @@
-swh-archiver (0.0.1-1) unstable; urgency=low
+swh-archiver (0.0.1-1~swh1) unstable-swh; urgency=medium
 
-  * Create new swh-archiver package
+  * Initial release
+  * Release swh.archiver v0.0.1
+  * First release since split from swh.storage
 
- -- Nicolas Dandrimont <olasd@softwareheritage.org>  Fri, 30 Jun 2017 15:04:49 +0200
+ -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Fri, 30 Jun 2017 17:55:33 +0200
