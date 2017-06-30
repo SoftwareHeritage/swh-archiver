@@ -1,4 +1,4 @@
-Source: swh.archiver
+Source: swh-archiver
 Maintainer: Software Heritage developers <swh-devel@inria.fr>
 Section: python
 Priority: optional
