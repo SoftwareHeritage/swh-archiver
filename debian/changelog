@@ -1,0 +1,5 @@
+swh-archiver (0.0.1-1) unstable; urgency=low
+
+  * Create new swh-archiver package
+
+ -- Nicolas Dandrimont <olasd@softwareheritage.org>  Fri, 30 Jun 2017 15:04:49 +0200
