@@ -3,7 +3,7 @@
 DBNAME = softwareheritage-archiver-dev
 DOCDIR = autodoc
 
-SQL_INIT   = ../swh-init.sql
+SQL_INIT   = ../../swh-storage/sql/swh-init.sql
 SQL_SCHEMA = swh-archiver-schema.sql
 SQL_FUNC   = swh-archiver-func.sql
 SQL_DATA   = swh-archiver-data.sql
