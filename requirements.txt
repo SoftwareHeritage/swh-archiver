@@ -1,3 +1,4 @@
 click
+kafka
 psycopg2
 vcversioner
