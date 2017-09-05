@@ -28,6 +28,7 @@ class BaseArchiveWorker(config.SWHConfig, metaclass=abc.ABCMeta):
     """Base archive worker.
 
     Inherit from this class and override:
+
     - ADDITIONAL_CONFIG: Some added configuration needed for the
       director to work
     - CONFIG_BASE_FILENAME: relative path to lookup for the
@@ -125,11 +126,12 @@ class BaseArchiveWorker(config.SWHConfig, metaclass=abc.ABCMeta):
             content_id: the content concerned
 
         Returns:
-            A dictionary with the following keys:
-             - 'present': set of archives where the content is present
-             - 'missing': set of archives where the content is missing
-             - 'ongoing': ongoing copies: dict mapping the archive id
-                          with the time the copy supposedly started.
+            dict: A dictionary with the following keys:
+
+            - present: set of archives where the content is present
+            - missing: set of archives where the content is missing
+            - ongoing: dict mapping the archive id with the time the copy
+              supposedly started.
         """
         result = self.archiver_db.content_archive_get(content_id)
         if not result:

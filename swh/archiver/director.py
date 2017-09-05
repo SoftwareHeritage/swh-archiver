@@ -26,6 +26,7 @@ class ArchiverDirectorBase(config.SWHConfig, metaclass=abc.ABCMeta):
     contents to archiver workers (for them to archive).
 
     Inherit from this class and provide:
+
     - ADDITIONAL_CONFIG: Some added configuration needed for the
       director to work
     - CONFIG_BASE_FILENAME: relative path to lookup for the
@@ -208,6 +209,7 @@ class ArchiverStdinToBackendDirector(ArchiverDirectorBase):
     them in batch in the cloud.
 
     The archiver director, in order:
+
     - Reads sha1 to send to a specific backend.
     - Checks if those sha1 are known in the archiver. If they are not,
       add them
