@@ -13,7 +13,7 @@ import os
 from nose.tools import istest
 from nose.plugins.attrib import attr
 
-from swh.core.tests.db_testing import DbsTestFixture
+from swh.core.tests.db_testing import SingleDbTestFixture
 
 from swh.archiver.storage import get_archiver_storage
 
@@ -32,20 +32,14 @@ TEST_DATA_DIR = os.path.join(TEST_DIR, '../../../../swh-storage-testdata')
 
 
 @attr('db')
-class TestArchiver(DbsTestFixture, ServerTestFixtureAsync,
+class TestArchiver(SingleDbTestFixture, ServerTestFixtureAsync,
                    unittest.TestCase):
     """ Test the objstorage archiver.
     """
 
-    TEST_DB_NAMES = [
-        'softwareheritage-archiver-test',
-    ]
-    TEST_DB_DUMPS = [
-        os.path.join(TEST_DATA_DIR, 'dumps/swh-archiver.dump'),
-    ]
-    TEST_DB_DUMP_TYPES = [
-        'pg_dump',
-    ]
+    TEST_DB_NAME = 'softwareheritage-archiver-test'
+    TEST_DB_DUMP = os.path.join(TEST_DATA_DIR, 'dumps/swh-archiver.dump')
+    TEST_DB_DUMP_TYPE = 'pg_dump'
 
     def setUp(self):
         # Launch the backup server
@@ -59,10 +53,6 @@ class TestArchiver(DbsTestFixture, ServerTestFixtureAsync,
         }
         self.app = app(self.config)
         super().setUp()
-
-        # Retrieve connection (depends on the order in TEST_DB_NAMES)
-        self.conn = self.conns[0]          # archiver db's connection
-        self.cursor = self.cursors[0]
 
         # Create source storage
         self.src_root = tempfile.mkdtemp()
