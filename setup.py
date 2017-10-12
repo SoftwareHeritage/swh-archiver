@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def parse_requirements():
@@ -21,10 +21,7 @@ setup(
     author='Software Heritage developers',
     author_email='swh-devel@inria.fr',
     url='https://forge.softwareheritage.org/diffusion/DARC/',
-    packages=[
-        'swh.archiver',
-        'swh.archiver.tests',
-    ],
+    packages=find_packages(),
     install_requires=parse_requirements(),
     setup_requires=['vcversioner'],
     vcversioner={},
