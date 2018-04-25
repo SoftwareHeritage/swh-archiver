@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2017  The Software Heritage developers
+# Copyright (C) 2015-2018  The Software Heritage developers
 # See the AUTHORS file at the top-level directory of this distribution
 # License: GNU General Public License version 3, or any later version
 # See top-level LICENSE file for more information
@@ -14,6 +14,7 @@ from nose.tools import istest
 from nose.plugins.attrib import attr
 
 from swh.core.tests.db_testing import SingleDbTestFixture
+from swh.core.tests.server_testing import ServerTestFixtureAsync
 
 from swh.archiver.storage import get_archiver_storage
 
@@ -25,7 +26,6 @@ from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError
 
 from swh.objstorage.api.server import make_app as app
-from swh.storage.tests.server_testing import ServerTestFixtureAsync
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 TEST_DATA_DIR = os.path.join(TEST_DIR, '../../../../swh-storage-testdata')
