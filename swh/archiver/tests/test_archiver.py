@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2017  The Software Heritage developers
+# Copyright (C) 2015-2018  The Software Heritage developers
 # See the AUTHORS file at the top-level directory of this distribution
 # License: GNU General Public License version 3, or any later version
 # See top-level LICENSE file for more information
@@ -24,16 +24,12 @@ from swh.archiver.db import utcnow
 from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError
 
-from swh.objstorage.api.server import make_app as app
-from swh.storage.tests.server_testing import ServerTestFixtureAsync
-
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 TEST_DATA_DIR = os.path.join(TEST_DIR, '../../../../swh-storage-testdata')
 
 
 @attr('db')
-class TestArchiver(SingleDbTestFixture, ServerTestFixtureAsync,
-                   unittest.TestCase):
+class TestArchiver(SingleDbTestFixture, unittest.TestCase):
     """ Test the objstorage archiver.
     """
 
@@ -43,15 +39,6 @@ class TestArchiver(SingleDbTestFixture, ServerTestFixtureAsync,
 
     def setUp(self):
         # Launch the backup server
-        self.dest_root = tempfile.mkdtemp(prefix='remote')
-        self.config = {
-            'cls': 'pathslicing',
-            'args': {
-                'root': self.dest_root,
-                'slicing': '0:2/2:4/4:6',
-            }
-        }
-        self.app = app(self.config)
         super().setUp()
 
         # Create source storage
@@ -65,11 +52,12 @@ class TestArchiver(SingleDbTestFixture, ServerTestFixtureAsync,
         }
         self.src_storage = get_objstorage(**src_config)
 
-        # Create destination storage
+        self.dest_root = tempfile.mkdtemp(prefix='remote')
         dest_config = {
-            'cls': 'remote',
+            'cls': 'pathslicing',
             'args': {
-                'url': self.url()
+                'root': self.dest_root,
+                'slicing': '0:2/2:4/4:6',
             }
         }
         self.dest_storage = get_objstorage(**dest_config)

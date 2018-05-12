@@ -27,23 +27,26 @@ class ArchiverStorage():
         """
         try:
             if isinstance(dbconn, psycopg2.extensions.connection):
-                self.db = ArchiverDb(dbconn)
+                self._db = ArchiverDb(dbconn)
             else:
-                self.db = ArchiverDb.connect(dbconn)
+                self._db = ArchiverDb.connect(dbconn)
         except psycopg2.OperationalError as e:
             raise StorageDBError(e)
 
+    def get_db(self):
+        return self._db
+
     @db_transaction_generator
-    def archive_ls(self, cur=None):
+    def archive_ls(self, db=None, cur=None):
         """ Get all the archives registered on the server.
 
         Yields:
             a tuple (server_id, server_url) for each archive server.
         """
-        yield from self.db.archive_ls(cur)
+        yield from db.archive_ls(cur)
 
     @db_transaction
-    def content_archive_get(self, content_id, cur=None):
+    def content_archive_get(self, content_id, db=None, cur=None):
         """ Get the archival status of a content.
 
         Retrieve from the database the archival status of the given content
@@ -55,11 +58,11 @@ class ArchiverStorage():
             A tuple (content_id, present_copies, ongoing_copies), where
             ongoing_copies is a dict mapping copy to mtime.
         """
-        return self.db.content_archive_get(content_id, cur)
+        return db.content_archive_get(content_id, cur)
 
     @db_transaction_generator
     def content_archive_get_copies(self, last_content=None, limit=1000,
-                                   cur=None):
+                                   db=None, cur=None):
         """ Get the list of copies for `limit` contents starting after
            `last_content`.
 
@@ -74,13 +77,12 @@ class ArchiverStorage():
             ongoing_copies is a dict mapping copy to mtime.
 
         """
-        yield from self.db.content_archive_get_copies(last_content, limit,
-                                                      cur)
+        yield from db.content_archive_get_copies(last_content, limit, cur)
 
     @db_transaction_generator
     def content_archive_get_unarchived_copies(
             self, retention_policy, last_content=None,
-            limit=1000, cur=None):
+            limit=1000, db=None, cur=None):
         """ Get the list of copies for `limit` contents starting after
             `last_content`. Yields only copies with number of present
             smaller than `retention policy`.
@@ -97,11 +99,12 @@ class ArchiverStorage():
             ongoing_copies is a dict mapping copy to mtime.
 
         """
-        yield from self.db.content_archive_get_unarchived_copies(
+        yield from db.content_archive_get_unarchived_copies(
             retention_policy, last_content, limit, cur)
 
     @db_transaction_generator
-    def content_archive_get_missing(self, content_ids, backend_name, cur=None):
+    def content_archive_get_missing(self, content_ids, backend_name, db=None,
+                                    cur=None):
         """Retrieve missing sha1s from source_name.
 
         Args:
@@ -112,9 +115,7 @@ class ArchiverStorage():
             missing sha1s from backend_name
 
         """
-        db = self.db
-
-        db.mktemp_content_archive()
+        db.mktemp_content_archive(cur)
 
         db.copy_to(content_ids, 'tmp_content_archive', ['content_id'], cur)
 
@@ -122,7 +123,7 @@ class ArchiverStorage():
             yield content_id[0]
 
     @db_transaction_generator
-    def content_archive_get_unknown(self, content_ids, cur=None):
+    def content_archive_get_unknown(self, content_ids, db=None, cur=None):
         """Retrieve unknown sha1s from content_archive.
 
         Args:
@@ -132,9 +133,7 @@ class ArchiverStorage():
             Unknown sha1s from content_archive
 
         """
-        db = self.db
-
-        db.mktemp_content_archive()
+        db.mktemp_content_archive(cur)
 
         db.copy_to(content_ids, 'tmp_content_archive', ['content_id'], cur)
 
@@ -143,7 +142,7 @@ class ArchiverStorage():
 
     @db_transaction
     def content_archive_update(self, content_id, archive_id,
-                               new_status=None, cur=None):
+                               new_status=None, db=None, cur=None):
         """ Update the status of an archive content and set its mtime to now
 
         Change the mtime of an archived content for the given archive and set
@@ -157,11 +156,11 @@ class ArchiverStorage():
                 the function only change the mtime of the content for the
                 given archive.
         """
-        self.db.content_archive_update(content_id, archive_id, new_status, cur)
+        db.content_archive_update(content_id, archive_id, new_status, cur)
 
     @db_transaction
     def content_archive_add(
-            self, content_ids, sources_present, cur=None):
+            self, content_ids, sources_present, db=None, cur=None):
         """Insert a new entry in db about content_id.
 
         Args:
@@ -169,8 +168,6 @@ class ArchiverStorage():
             sources_present ([str]): List of source names where
                                      contents are present
         """
-        db = self.db
-
         # Prepare copies dictionary
         copies = {}
         for source in sources_present:
@@ -182,7 +179,7 @@ class ArchiverStorage():
         copies = json.dumps(copies)
         num_present = len(sources_present)
 
-        db.mktemp('content_archive')
+        db.mktemp('content_archive', cur)
         db.copy_to(
             ({'content_id': id,
               'copies': copies,

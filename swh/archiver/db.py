@@ -166,14 +166,13 @@ class ArchiverDb(BaseDb):
         """Add new content archive entries from temporary table.
 
         Use from archiver.storage module::
-
-            self.db.mktemp_content_archive()
+            db.mktemp_content_archive(cur)
             # copy data over to the temp table
-            self.db.copy_to([{'colname': id0}, {'colname': id1}],
-                            'tmp_cache_content',
-                            ['colname'], cur)
+            db.copy_to([{'colname': id0}, {'colname': id1}],
+                       'tmp_cache_content',
+                       ['colname'], cur)
             # insert into the main table
-            self.db.add_content_archive_from_temp(cur)
+            db.add_content_archive_from_temp(cur)
 
         """
         pass
