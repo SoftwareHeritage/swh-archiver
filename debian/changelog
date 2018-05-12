@@ -1,8 +1,10 @@
-swh-archiver (0.0.2-1~swh1~bpo9+1) stretch-swh; urgency=medium
+swh-archiver (0.0.3-1~swh1) unstable-swh; urgency=medium
 
-  * Rebuild for stretch-backports.
+  * Release swh.archiver v0.0.3
+  * Update for new storage
+  * Don't depend on a remote objstorage for tests
 
- -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Thu, 12 Oct 2017 18:50:15 +0200
+ -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Sat, 12 May 2018 18:27:21 +0200
 
 swh-archiver (0.0.2-1~swh1) unstable-swh; urgency=medium
 

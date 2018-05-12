@@ -1,3 +1,5 @@
+.. _swh-archiver:
+
 Software Heritage - Development Documentation
 =============================================
 
