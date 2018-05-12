@@ -1,3 +1,9 @@
+swh-archiver (0.0.3-1~swh1~bpo9+1) stretch-swh; urgency=medium
+
+  * Rebuild for stretch-backports.
+
+ -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Sat, 12 May 2018 18:27:20 +0200
+
 swh-archiver (0.0.3-1~swh1) unstable-swh; urgency=medium
 
   * Release swh.archiver v0.0.3
