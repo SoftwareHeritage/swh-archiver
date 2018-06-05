@@ -1,3 +1,10 @@
+swh-archiver (0.0.4-1~swh1) unstable-swh; urgency=medium
+
+  * Release swh.archiver v0.0.4
+  * Update for new db_transaction{,_generator}
+
+ -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Tue, 05 Jun 2018 14:09:46 +0200
+
 swh-archiver (0.0.3-1~swh1) unstable-swh; urgency=medium
 
   * Release swh.archiver v0.0.3
