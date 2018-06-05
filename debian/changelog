@@ -1,8 +1,9 @@
-swh-archiver (0.0.3-1~swh1~bpo9+1) stretch-swh; urgency=medium
+swh-archiver (0.0.4-1~swh1) unstable-swh; urgency=medium
 
-  * Rebuild for stretch-backports.
+  * Release swh.archiver v0.0.4
+  * Update for new db_transaction{,_generator}
 
- -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Sat, 12 May 2018 18:27:20 +0200
+ -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Tue, 05 Jun 2018 14:09:46 +0200
 
 swh-archiver (0.0.3-1~swh1) unstable-swh; urgency=medium
 

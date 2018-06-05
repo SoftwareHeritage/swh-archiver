@@ -36,7 +36,7 @@ class ArchiverStorage():
     def get_db(self):
         return self._db
 
-    @db_transaction_generator
+    @db_transaction_generator()
     def archive_ls(self, db=None, cur=None):
         """ Get all the archives registered on the server.
 
@@ -45,7 +45,7 @@ class ArchiverStorage():
         """
         yield from db.archive_ls(cur)
 
-    @db_transaction
+    @db_transaction()
     def content_archive_get(self, content_id, db=None, cur=None):
         """ Get the archival status of a content.
 
@@ -60,7 +60,7 @@ class ArchiverStorage():
         """
         return db.content_archive_get(content_id, cur)
 
-    @db_transaction_generator
+    @db_transaction_generator()
     def content_archive_get_copies(self, last_content=None, limit=1000,
                                    db=None, cur=None):
         """ Get the list of copies for `limit` contents starting after
@@ -79,7 +79,7 @@ class ArchiverStorage():
         """
         yield from db.content_archive_get_copies(last_content, limit, cur)
 
-    @db_transaction_generator
+    @db_transaction_generator()
     def content_archive_get_unarchived_copies(
             self, retention_policy, last_content=None,
             limit=1000, db=None, cur=None):
@@ -102,7 +102,7 @@ class ArchiverStorage():
         yield from db.content_archive_get_unarchived_copies(
             retention_policy, last_content, limit, cur)
 
-    @db_transaction_generator
+    @db_transaction_generator()
     def content_archive_get_missing(self, content_ids, backend_name, db=None,
                                     cur=None):
         """Retrieve missing sha1s from source_name.
@@ -122,7 +122,7 @@ class ArchiverStorage():
         for content_id in db.content_archive_get_missing(backend_name, cur):
             yield content_id[0]
 
-    @db_transaction_generator
+    @db_transaction_generator()
     def content_archive_get_unknown(self, content_ids, db=None, cur=None):
         """Retrieve unknown sha1s from content_archive.
 
@@ -140,7 +140,7 @@ class ArchiverStorage():
         for content_id in db.content_archive_get_unknown(cur):
             yield content_id[0]
 
-    @db_transaction
+    @db_transaction()
     def content_archive_update(self, content_id, archive_id,
                                new_status=None, db=None, cur=None):
         """ Update the status of an archive content and set its mtime to now
@@ -158,7 +158,7 @@ class ArchiverStorage():
         """
         db.content_archive_update(content_id, archive_id, new_status, cur)
 
-    @db_transaction
+    @db_transaction()
     def content_archive_add(
             self, content_ids, sources_present, db=None, cur=None):
         """Insert a new entry in db about content_id.
