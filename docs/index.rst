@@ -8,6 +8,11 @@ Software Heritage - Development Documentation
    :caption: Contents:
 
 
+Design blueprint
+----------------
+
+* :ref:`swh-archiver-blueprint`
+
 
 Indices and tables
 ==================
