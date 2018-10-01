@@ -1,15 +1,20 @@
 .. _swh-archiver:
 
-Software Heritage - Development Documentation
-=============================================
+Software Heritage - Archiver
+============================
+
+Orchestrator in charge of guaranteeing that :ref:`object storage
+<swh-objstorage>` content is pristine and available in a sufficient amount of
+copies.
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
 
-Design blueprint
-----------------
+Design
+------
 
 * :ref:`swh-archiver-blueprint`
 
