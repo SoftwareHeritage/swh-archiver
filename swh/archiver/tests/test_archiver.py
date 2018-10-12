@@ -5,25 +5,20 @@
 
 import datetime
 import glob
-import tempfile
-import shutil
-import unittest
 import os
+import shutil
+import tempfile
+import unittest
 
-from nose.tools import istest
 from nose.plugins.attrib import attr
 
-from swh.core.tests.db_testing import SingleDbTestFixture
-
-from swh.archiver.storage import get_archiver_storage
-
-from swh.archiver import ArchiverWithRetentionPolicyDirector
-from swh.archiver import ArchiverWithRetentionPolicyWorker
+from swh.archiver import (ArchiverWithRetentionPolicyDirector,
+                          ArchiverWithRetentionPolicyWorker)
 from swh.archiver.db import utcnow
-
+from swh.archiver.storage import get_archiver_storage
+from swh.core.tests.db_testing import SingleDbTestFixture
 from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError
-
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
@@ -168,8 +163,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         )
 
     # Integration test
-    @istest
-    def archive_missing_content(self):
+    def test_archive_missing_content(self):
         """ Run archiver on a missing content should archive it.
         """
         obj_data = b'archive_missing_content'
@@ -187,8 +181,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         remote_data = self.dest_storage.get(obj_id)
         self.assertEquals(obj_data, remote_data)
 
-    @istest
-    def archive_present_content(self):
+    def test_archive_present_content(self):
         """ A content that is not 'missing' shouldn't be archived.
         """
         obj_id = self._add_content('uffizi', b'archive_present_content')
@@ -200,8 +193,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         with self.assertRaises(ObjNotFoundError):
             self.dest_storage.get(obj_id)
 
-    @istest
-    def archive_already_enough(self):
+    def test_archive_already_enough(self):
         """ A content missing with enough copies shouldn't be archived.
         """
         obj_id = self._add_content('uffizi', b'archive_alread_enough')
@@ -213,8 +205,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         with self.assertRaises(ObjNotFoundError):
             self.dest_storage.get(obj_id)
 
-    @istest
-    def content_archive_get_copies(self):
+    def test_content_archive_get_copies(self):
         self.assertCountEqual(
             self.archiver.archiver_storage.content_archive_get_copies(),
             [],
@@ -231,19 +222,16 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
     def archival_elapsed(self, mtime):
         return self._create_worker()._is_archival_delay_elapsed(mtime)
 
-    @istest
-    def vstatus_ongoing_remaining(self):
+    def test_vstatus_ongoing_remaining(self):
         self.assertFalse(self.archival_elapsed(utcnow()))
 
-    @istest
-    def vstatus_ongoing_elapsed(self):
+    def test_vstatus_ongoing_elapsed(self):
         past_time = (utcnow()
                      - datetime.timedelta(
                          seconds=self._create_worker().archival_max_age))
         self.assertTrue(self.archival_elapsed(past_time))
 
-    @istest
-    def need_archival_missing(self):
+    def test_need_archival_missing(self):
         """ A content should need archival when it is missing.
         """
         status_copies = {'present': ['uffizi'], 'missing': ['banco']}
@@ -251,8 +239,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         self.assertEqual(worker.need_archival(status_copies),
                          True)
 
-    @istest
-    def need_archival_present(self):
+    def test_need_archival_present(self):
         """ A content present everywhere shouldn't need archival
         """
         status_copies = {'present': ['uffizi', 'banco']}
@@ -270,20 +257,17 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         self.assertIn('banco', worker.compute_copies(
             set(worker.objstorages), obj_id)[status])
 
-    @istest
-    def compute_copies_present(self):
+    def test_compute_copies_present(self):
         """ A present content should be detected with correct status
         """
         self._compute_copies_status('present')
 
-    @istest
-    def compute_copies_missing(self):
+    def test_compute_copies_missing(self):
         """ A missing content should be detected with correct status
         """
         self._compute_copies_status('missing')
 
-    @istest
-    def compute_copies_extra_archive(self):
+    def test_compute_copies_extra_archive(self):
         obj_id = self._add_content('banco', b'foobar')
         self._update_status(obj_id, 'banco', 'present')
         self._update_status(obj_id, 'random_archive', 'present')
@@ -298,8 +282,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         worker = self._create_worker()
         return list(worker.choose_backup_servers(present, missing))
 
-    @istest
-    def choose_backup_servers(self):
+    def test_choose_backup_servers(self):
         self.assertEqual(len(self._get_backups(['uffizi', 'banco'], [])), 0)
         self.assertEqual(len(self._get_backups(['uffizi'], ['banco'])), 1)
         # Even with more possible destinations, do not take more than the
@@ -370,30 +353,26 @@ class TestArchiverStorageStub(unittest.TestCase):
         shutil.rmtree(self.log_root)
         super().tearDown()
 
-    @istest
-    def archive_ls(self):
+    def test_archive_ls(self):
         self.assertCountEqual(
             self.archiver_storage.archive_ls(),
             self.config['args']['archives'].items()
         )
 
-    @istest
-    def content_archive_get(self):
+    def test_content_archive_get(self):
         for content_id in self.content_ids:
             self.assertEqual(
                 self.archiver_storage.content_archive_get(content_id),
                 (content_id, set(self.config['args']['present']), {}),
             )
 
-    @istest
-    def content_archive_get_copies(self):
+    def test_content_archive_get_copies(self):
         self.assertCountEqual(
             self.archiver_storage.content_archive_get_copies(),
             [],
         )
 
-    @istest
-    def content_archive_get_unarchived_copies(self):
+    def test_content_archive_get_unarchived_copies(self):
         retention_policy = 2
         self.assertCountEqual(
             self.archiver_storage.content_archive_get_unarchived_copies(
@@ -401,8 +380,7 @@ class TestArchiverStorageStub(unittest.TestCase):
             [],
         )
 
-    @istest
-    def content_archive_get_missing(self):
+    def test_content_archive_get_missing(self):
         self.assertCountEqual(
             self.archiver_storage.content_archive_get_missing(
                 self.content_ids,
@@ -425,8 +403,7 @@ class TestArchiverStorageStub(unittest.TestCase):
                 'unknown_archive'
             ))
 
-    @istest
-    def content_archive_get_unknown(self):
+    def test_content_archive_get_unknown(self):
         self.assertCountEqual(
             self.archiver_storage.content_archive_get_unknown(
                 self.content_ids,
@@ -434,8 +411,7 @@ class TestArchiverStorageStub(unittest.TestCase):
             [],
         )
 
-    @istest
-    def content_archive_update(self):
+    def test_content_archive_update(self):
         for content_id in self.content_ids:
             self.archiver_storage.content_archive_update(
                 content_id, 'present_archive', 'present')
