@@ -24,8 +24,8 @@ from swh.archiver.db import utcnow
 from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError
 
-TEST_DIR = os.path.dirname(os.path.abspath(__file__))
-TEST_DATA_DIR = os.path.join(TEST_DIR, '../../../../swh-storage-testdata')
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
 @attr('db')
@@ -34,8 +34,8 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
     """
 
     TEST_DB_NAME = 'softwareheritage-archiver-test'
-    TEST_DB_DUMP = os.path.join(TEST_DATA_DIR, 'dumps/swh-archiver.dump')
-    TEST_DB_DUMP_TYPE = 'pg_dump'
+    TEST_DB_DUMP = os.path.join(DATA_DIR, 'dumps', 'swh-archiver.sql')
+    TEST_DB_DUMP_TYPE = 'psql'
 
     def setUp(self):
         # Launch the backup server
