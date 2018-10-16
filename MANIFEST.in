@@ -6,3 +6,4 @@ include requirements-swh.txt
 include version.txt
 recursive-include sql *
 recursive-include swh/archiver/tests/data *.sql
+recursive-include swh/archiver/sql *.sql
