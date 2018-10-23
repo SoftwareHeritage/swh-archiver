@@ -7,7 +7,7 @@ import gzip
 import tempfile
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from swh.archiver.checker import RepairContentChecker
 from swh.model import hashutil
@@ -29,7 +29,7 @@ class MockBackupObjStorage():
             raise ObjNotFoundError(obj_id)
 
 
-@attr('fs')
+@pytest.mark.fs
 class TestRepairChecker(unittest.TestCase):
     """ Test the content integrity checker
     """

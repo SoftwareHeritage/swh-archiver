@@ -10,7 +10,7 @@ import shutil
 import tempfile
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from swh.archiver import (ArchiverWithRetentionPolicyDirector,
                           ArchiverWithRetentionPolicyWorker)
@@ -22,7 +22,7 @@ from swh.objstorage.exc import ObjNotFoundError
 from swh.archiver.tests import SQL_DIR
 
 
-@attr('db')
+@pytest.mark.db
 class TestArchiver(SingleDbTestFixture, unittest.TestCase):
     """ Test the objstorage archiver.
     """
