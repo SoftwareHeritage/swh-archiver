@@ -177,7 +177,7 @@ class TestArchiver(SingleDbTestFixture, unittest.TestCase):
         self.archiver.run()
         # now the content should be present on remote objstorage
         remote_data = self.dest_storage.get(obj_id)
-        self.assertEquals(obj_data, remote_data)
+        self.assertEqual(obj_data, remote_data)
 
     def test_archive_present_content(self):
         """ A content that is not 'missing' shouldn't be archived.
