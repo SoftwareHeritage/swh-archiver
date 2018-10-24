@@ -20,10 +20,11 @@ from swh.core.tests.db_testing import SingleDbTestFixture
 from swh.objstorage import get_objstorage
 from swh.objstorage.exc import ObjNotFoundError
 from swh.archiver.tests import SQL_DIR
+from swh.scheduler.tests.celery_testing import CeleryTestFixture
 
 
 @pytest.mark.db
-class TestArchiver(SingleDbTestFixture, unittest.TestCase):
+class TestArchiver(CeleryTestFixture, SingleDbTestFixture, unittest.TestCase):
     """ Test the objstorage archiver.
     """
 
