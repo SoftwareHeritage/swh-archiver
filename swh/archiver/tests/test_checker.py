@@ -87,7 +87,9 @@ class TestRepairChecker(unittest.TestCase):
         self.assertFalse(self._is_missing(obj_id))
 
     def test_check_missing_content(self):
-        obj_id = hashutil.hash_data(b'check_missing_content')['sha1']
+        hashes = hashutil.MultiHash.from_data(
+            b'check_missing_content', hash_names=['sha1']).digest()
+        obj_id = hashes['sha1']
         self.assertFalse(self._is_corrupted(obj_id))
         self.assertTrue(self._is_missing(obj_id))
 
