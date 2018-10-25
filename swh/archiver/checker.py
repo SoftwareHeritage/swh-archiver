@@ -180,7 +180,7 @@ class RepairContentChecker(LogContentChecker):
             try:
                 content = backup.get(obj_id)
                 self.objstorage.restore(content, obj_id)
-            except ObjNotFoundError as e:
+            except ObjNotFoundError:
                 continue
             else:
                 # Return True direclty when a backup contains the object
