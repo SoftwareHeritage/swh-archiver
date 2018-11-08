@@ -1,3 +1,5 @@
+:orphan:
+
 .. _swh-archiver-blueprint:
 
 Archiver - design blueprint
