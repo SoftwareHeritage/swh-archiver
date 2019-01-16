@@ -3,26 +3,27 @@
 # License: GNU General Public License version 3, or any later version
 # See top-level LICENSE file for more information
 
-from swh.scheduler.task import Task
+from swh.scheduler.celery_backend.config import app
+
 from .worker import ArchiverWithRetentionPolicyWorker
 from .worker import ArchiverToBackendWorker
 
 
-class SWHArchiverWithRetentionPolicyTask(Task):
-    """Main task that archive a batch of content.
+@app.task(name='swh.archiver.tasks.SWHArchiverWithRetentionPolicyTask',
+          bind=True)
+def archive_with_retention(self, *args, **kwargs):
+    self.log.debug('%s, args=%s, kwargs=%s' % (
+        self.name, args, kwargs))
+    ArchiverWithRetentionPolicyWorker(*args, **kwargs).run()
+    self.log.debug('%s OK' % (self.name))
 
-    """
-    task_queue = 'swh_storage_archive_worker'
 
-    def run_task(self, *args, **kwargs):
-        ArchiverWithRetentionPolicyWorker(*args, **kwargs).run()
-
-
-class SWHArchiverToBackendTask(Task):
+@app.task(name='swh.archiver.tasks.SWHArchiverToBackendTask',
+          bind=True)
+def archive_to_backend(self, *args, **kwargs):
     """Main task that archive a batch of content in the cloud.
-
     """
-    task_queue = 'swh_storage_archive_worker_to_backend'
-
-    def run_task(self, *args, **kwargs):
-        ArchiverToBackendWorker(*args, **kwargs).run()
+    self.log.debug('%s, args=%s, kwargs=%s' % (
+        self.name, args, kwargs))
+    ArchiverToBackendWorker(*args, **kwargs).run()
+    self.log.debug('%s OK' % (self.name))
