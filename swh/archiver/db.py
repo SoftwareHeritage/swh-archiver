@@ -5,7 +5,8 @@
 
 import datetime
 
-from swh.storage.db import BaseDb, cursor_to_bytes, stored_procedure
+from swh.core.db import BaseDb
+from swh.core.db.db_utils import stored_procedure
 
 
 def utcnow():
@@ -25,7 +26,7 @@ class ArchiverDb(BaseDb):
         """
         cur = self._cursor(cur)
         cur.execute("SELECT * FROM archive")
-        yield from cursor_to_bytes(cur)
+        yield from cur
 
     def content_archive_get(self, content_id, cur=None):
         """ Get the archival status of a content in a specific server.
@@ -101,7 +102,7 @@ class ArchiverDb(BaseDb):
 
         cur = self._cursor(cur)
         cur.execute(query, vars)
-        for content_id, present in cursor_to_bytes(cur):
+        for content_id, present in cur:
             yield (content_id, present, {})
 
     def content_archive_get_unarchived_copies(
@@ -150,7 +151,7 @@ class ArchiverDb(BaseDb):
 
         cur = self._cursor(cur)
         cur.execute(query, vars)
-        for content_id, present in cursor_to_bytes(cur):
+        for content_id, present in cur:
             yield (content_id, present, {})
 
     @stored_procedure('swh_mktemp_content_archive')
@@ -187,7 +188,7 @@ class ArchiverDb(BaseDb):
         cur = self._cursor(cur)
         cur.execute("select * from swh_content_archive_missing(%s)",
                     (backend_name,))
-        yield from cursor_to_bytes(cur)
+        yield from cur
 
     def content_archive_get_unknown(self, cur=None):
         """Retrieve unknown sha1 from archiver db.
@@ -195,7 +196,7 @@ class ArchiverDb(BaseDb):
         """
         cur = self._cursor(cur)
         cur.execute('select * from swh_content_archive_unknown()')
-        yield from cursor_to_bytes(cur)
+        yield from cur
 
     def content_archive_update(self, content_id, archive_id,
                                new_status=None, cur=None):
