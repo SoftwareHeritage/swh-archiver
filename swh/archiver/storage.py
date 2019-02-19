@@ -11,8 +11,7 @@ import time
 from .db import ArchiverDb
 
 from swh.model import hashutil
-from swh.storage.common import db_transaction_generator, db_transaction
-from swh.storage.exc import StorageDBError
+from swh.core.db.common import db_transaction_generator, db_transaction
 
 
 class ArchiverStorage():
@@ -25,13 +24,10 @@ class ArchiverStorage():
             db_conn: either a libpq connection string, or a psycopg2 connection
 
         """
-        try:
-            if isinstance(dbconn, psycopg2.extensions.connection):
-                self._db = ArchiverDb(dbconn)
-            else:
-                self._db = ArchiverDb.connect(dbconn)
-        except psycopg2.OperationalError as e:
-            raise StorageDBError(e)
+        if isinstance(dbconn, psycopg2.extensions.connection):
+            self._db = ArchiverDb(dbconn)
+        else:
+            self._db = ArchiverDb.connect(dbconn)
 
     def get_db(self):
         return self._db

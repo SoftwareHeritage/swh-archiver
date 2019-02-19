@@ -7,12 +7,11 @@ import gzip
 import tempfile
 import unittest
 
-from nose.tools import istest
-from nose.plugins.attrib import attr
+import pytest
 
-from swh.objstorage.exc import ObjNotFoundError
 from swh.archiver.checker import RepairContentChecker
 from swh.model import hashutil
+from swh.objstorage.exc import ObjNotFoundError
 
 
 class MockBackupObjStorage():
@@ -30,7 +29,7 @@ class MockBackupObjStorage():
             raise ObjNotFoundError(obj_id)
 
 
-@attr('fs')
+@pytest.mark.fs
 class TestRepairChecker(unittest.TestCase):
     """ Test the content integrity checker
     """
@@ -72,16 +71,14 @@ class TestRepairChecker(unittest.TestCase):
         """
         return self.checker._check_content(obj_id) == 'missing'
 
-    @istest
-    def check_valid_content(self):
+    def test_check_valid_content(self):
         # Check that a valid content is valid.
         content = b'check_valid_content'
         obj_id = self.checker.objstorage.add(content)
         self.assertFalse(self._is_corrupted(obj_id))
         self.assertFalse(self._is_missing(obj_id))
 
-    @istest
-    def check_corrupted_content(self):
+    def test_check_corrupted_content(self):
         # Check that an invalid content is noticed.
         content = b'check_corrupted_content'
         obj_id = self.checker.objstorage.add(content)
@@ -89,14 +86,14 @@ class TestRepairChecker(unittest.TestCase):
         self.assertTrue(self._is_corrupted(obj_id))
         self.assertFalse(self._is_missing(obj_id))
 
-    @istest
-    def check_missing_content(self):
-        obj_id = hashutil.hash_data(b'check_missing_content')['sha1']
+    def test_check_missing_content(self):
+        hashes = hashutil.MultiHash.from_data(
+            b'check_missing_content', hash_names=['sha1']).digest()
+        obj_id = hashes['sha1']
         self.assertFalse(self._is_corrupted(obj_id))
         self.assertTrue(self._is_missing(obj_id))
 
-    @istest
-    def repair_content_present_first(self):
+    def test_repair_content_present_first(self):
         # Try to repair a content that is in the backup storage.
         content = b'repair_content_present_first'
         obj_id = self.checker.objstorage.add(content)
@@ -108,8 +105,7 @@ class TestRepairChecker(unittest.TestCase):
         self.checker.corrupted_content(obj_id)
         self.assertFalse(self._is_corrupted(obj_id))
 
-    @istest
-    def repair_content_present_second(self):
+    def test_repair_content_present_second(self):
         # Try to repair a content that is in the backup storage.
         content = b'repair_content_present_first'
         obj_id = self.checker.objstorage.add(content)
@@ -121,8 +117,7 @@ class TestRepairChecker(unittest.TestCase):
         self.checker.corrupted_content(obj_id)
         self.assertFalse(self._is_corrupted(obj_id))
 
-    @istest
-    def repair_content_present_distributed(self):
+    def test_repair_content_present_distributed(self):
         # Try to repair two contents that are in separate backup storages.
         content1 = b'repair_content_present_distributed_2'
         content2 = b'repair_content_present_distributed_1'
@@ -142,8 +137,7 @@ class TestRepairChecker(unittest.TestCase):
         self.assertFalse(self._is_corrupted(obj_id1))
         self.assertFalse(self._is_corrupted(obj_id2))
 
-    @istest
-    def repair_content_missing(self):
+    def test_repair_content_missing(self):
         # Try to repair a content that is NOT in the backup storage.
         content = b'repair_content_missing'
         obj_id = self.checker.objstorage.add(content)

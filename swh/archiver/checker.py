@@ -36,6 +36,7 @@ class BaseContentChecker(config.SWHConfig, metaclass=abc.ABCMeta):
             }
         }),
         'batch_size': ('int', 1000),
+        'log_tag': ('str', 'objstorage.checker')
     }
 
     CONFIG_BASE_FILENAME = 'objstorage/objstorage_checker'
@@ -46,6 +47,7 @@ class BaseContentChecker(config.SWHConfig, metaclass=abc.ABCMeta):
         self.config = self.parse_config_file()
         self.objstorage = get_objstorage(**self.config['storage'])
         self.batch_size = self.config['batch_size']
+        self.logger = logging.getLogger(self.config['log_tag'])
 
     def run_as_daemon(self):
         """ Start the check routine and perform it forever.
@@ -56,8 +58,8 @@ class BaseContentChecker(config.SWHConfig, metaclass=abc.ABCMeta):
         while True:
             try:
                 self.run()
-            except:
-                pass
+            except Exception:
+                self.logger.exception('Unexpected error.')
 
     def run(self):
         """ Check a batch of content.
@@ -108,24 +110,7 @@ class BaseContentChecker(config.SWHConfig, metaclass=abc.ABCMeta):
 class LogContentChecker(BaseContentChecker):
     """ Content integrity checker that just log detected errors.
     """
-
-    DEFAULT_CONFIG = {
-        'storage': ('dict', {
-            'cls': 'pathslicing',
-            'args': {
-                'root': '/srv/softwareheritage/objects',
-                'slicing': '0:2/2:4/4:6'
-            }
-        }),
-        'batch_size': ('int', 1000),
-        'log_tag': ('str', 'objstorage.checker')
-    }
-
     CONFIG_BASE_FILENAME = 'objstorage/log_checker'
-
-    def __init__(self):
-        super().__init__()
-        self.logger = logging.getLogger(self.config['log_tag'])
 
     def corrupted_content(self, obj_id):
         """ Perform an action to treat with a corrupted content.
@@ -195,7 +180,7 @@ class RepairContentChecker(LogContentChecker):
             try:
                 content = backup.get(obj_id)
                 self.objstorage.restore(content, obj_id)
-            except ObjNotFoundError as e:
+            except ObjNotFoundError:
                 continue
             else:
                 # Return True direclty when a backup contains the object
