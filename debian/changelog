@@ -1,3 +1,9 @@
+swh-archiver (0.0.6-1~swh2) unstable-swh; urgency=low
+
+  * New release fixing build dependencies
+
+ -- Antoine Romain Dumont (@ardumont) <antoine.romain.dumont@gmail.com>  Tue, 19 Feb 2019 14:02:41 +0100
+
 swh-archiver (0.0.6-1~swh1) unstable-swh; urgency=medium
 
   * New upstream release 0.0.6     - (tagged by Antoine R. Dumont
