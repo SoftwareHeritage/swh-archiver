@@ -3,26 +3,19 @@
 # License: GNU General Public License version 3, or any later version
 # See top-level LICENSE file for more information
 
-from swh.scheduler.task import Task
+from celery import current_app as app
+
 from .worker import ArchiverWithRetentionPolicyWorker
 from .worker import ArchiverToBackendWorker
 
 
-class SWHArchiverWithRetentionPolicyTask(Task):
-    """Main task that archive a batch of content.
-
-    """
-    task_queue = 'swh_storage_archive_worker'
-
-    def run_task(self, *args, **kwargs):
-        ArchiverWithRetentionPolicyWorker(*args, **kwargs).run()
+@app.task(name=__name__ + '.SWHArchiverWithRetentionPolicyTask')
+def archive_with_retention(*args, **kwargs):
+    ArchiverWithRetentionPolicyWorker(*args, **kwargs).run()
 
 
-class SWHArchiverToBackendTask(Task):
+@app.task(name=__name__ + '.SWHArchiverToBackendTask')
+def archive_to_backend(*args, **kwargs):
     """Main task that archive a batch of content in the cloud.
-
     """
-    task_queue = 'swh_storage_archive_worker_to_backend'
-
-    def run_task(self, *args, **kwargs):
-        ArchiverToBackendWorker(*args, **kwargs).run()
+    ArchiverToBackendWorker(*args, **kwargs).run()

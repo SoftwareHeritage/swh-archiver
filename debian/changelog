@@ -1,8 +1,21 @@
-swh-archiver (0.0.4-1~swh1~bpo9+1) stretch-swh; urgency=medium
+swh-archiver (0.0.6-1~swh2) unstable-swh; urgency=low
 
-  * Rebuild for stretch-backports.
+  * New release fixing build dependencies
 
- -- Nicolas Dandrimont <nicolas@dandrimont.eu>  Tue, 05 Jun 2018 14:09:46 +0200
+ -- Antoine Romain Dumont (@ardumont) <antoine.romain.dumont@gmail.com>  Tue, 19 Feb 2019 14:02:41 +0100
+
+swh-archiver (0.0.6-1~swh1) unstable-swh; urgency=medium
+
+  * New upstream release 0.0.6     - (tagged by Antoine R. Dumont
+    (@ardumont) <antoine.romain.dumont@gmail.com> on 2019-02-19 13:51:38
+    +0100)
+  * Upstream changes:     - v0.0.6     - update dep on swh-
+    scheduler>0.0.39 and pytest<4 (tests)     - Use the new BaseDb from
+    swh.core     - Rewrite archiver's tasks and unit tests with latest
+    scheduler's "API"     - swh.archiver.updater: Drop redundant SWH
+    prefix     - Remove debug logging from tasks' code
+
+ -- Software Heritage autobuilder (on jenkins-debian1) <jenkins@jenkins-debian1.internal.softwareheritage.org>  Tue, 19 Feb 2019 12:56:39 +0000
 
 swh-archiver (0.0.4-1~swh1) unstable-swh; urgency=medium
 

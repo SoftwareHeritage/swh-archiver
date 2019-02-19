@@ -1,16 +1,16 @@
-# Copyright (C) 2017  The Software Heritage developers
+# Copyright (C) 2017-2018  The Software Heritage developers
 # See the AUTHORS file at the top-level directory of this distribution
 # License: GNU General Public License version 3, or any later version
 # See top-level LICENSE file for more information
 
 import logging
 
-from swh.journal.client import SWHJournalClient
+from swh.journal.client import JournalClient
 
 from .storage import get_archiver_storage
 
 
-class SWHArchiverContentUpdater(SWHJournalClient):
+class ArchiverContentUpdater(JournalClient):
     """Client in charge of updating new contents in the content_archiver
        db.
 
@@ -52,5 +52,5 @@ if __name__ == '__main__':
         format='%(asctime)s %(process)d %(levelname)s %(message)s'
     )
 
-    content_updater = SWHArchiverContentUpdater()
+    content_updater = ArchiverContentUpdater()
     content_updater.process()

@@ -361,7 +361,7 @@ class ArchiverToBackendWorker(BaseArchiveWorker):
     ADDITIONAL_CONFIG = {
         'next_task': (
             'dict', {
-                'queue': 'swh.indexer.tasks.SWHOrchestratorAllContentsTask',
+                'name': 'swh.indexer.tasks.SWHOrchestratorAllContentsTask',
                 'batch_size': 10,
             }
         )
@@ -379,8 +379,8 @@ class ArchiverToBackendWorker(BaseArchiveWorker):
         self.destination = destination
         next_task = self.config['next_task']
         if next_task:
-            destination_queue = next_task['queue']
-            self.task_destination = get_task(destination_queue)
+            destination_task = next_task['name']
+            self.task_destination = get_task(destination_task)
             self.batch_size = int(next_task['batch_size'])
         else:
             self.task_destination = self.batch_size = None
