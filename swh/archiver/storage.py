@@ -32,6 +32,9 @@ class ArchiverStorage():
     def get_db(self):
         return self._db
 
+    def put_db(self, db):
+        pass
+
     @db_transaction_generator()
     def archive_ls(self, db=None, cur=None):
         """ Get all the archives registered on the server.
