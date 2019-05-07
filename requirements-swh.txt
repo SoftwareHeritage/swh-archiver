@@ -1,4 +1,4 @@
-swh.core >= 0.0.54
+swh.core[db] >= 0.0.60
 swh.journal >= 0.0.5
 swh.model >= 0.0.27
 swh.objstorage >= 0.0.17
